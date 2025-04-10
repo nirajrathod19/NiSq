@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% block title %}PDF to Photo - NiSqFile{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>PDF to Photo Conversion</h1>
+    <p class="lead">Convert PDF documents to high-quality images</p>
+</div>
+
+<div class="file-upload-container">
+    <form id="fileOperationForm" action="/pdf-to-photo" method="post" enctype="multipart/form-data">
+        <div class="upload-area">
+            <i class="fas fa-file-pdf"></i>
+            <h3>Upload PDF</h3>
+            <p class="upload-text">Drag & drop your PDF file here or click to browse</p>
+            <p class="text-muted">Only PDF files are supported (.pdf)</p>
+            <input type="file" name="file" accept=".pdf" required>
+        </div>
+        
+        <div class="options-container mt-4">
+            <h3>Conversion Options</h3>
+            <div class="form-group">
+                <label for="imageFormat">Output Format:</label>
+                <select id="imageFormat" name="format" class="form-control">
+                    <option value="png" selected>PNG (High Quality)</option>
+                    <option value="jpg">JPG (Smaller Size)</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary btn-block" disabled>Convert PDF to Images</button>
+        </div>
+    </form>
+    
+    <div class="progress-container mt-4">
+        <div class="progress-bar">
+            <div class="fill"></div>
+        </div>
+        <p class="progress-text">Processing...</p>
+    </div>
+    
+    <div class="results-container"></div>
+</div>
+
+<div class="info-section mt-5">
+    <h3>About PDF to Image Conversion</h3>
+    <p>This tool allows you to convert each page of a PDF document into separate image files. This is useful when you need to:</p>
+    <ul>
+        <li>Insert PDF content into presentations or documents</li>
+        <li>Share PDF content on platforms that don't support PDFs</li>
+        <li>Extract images or diagrams from PDF documents</li>
+        <li>Create thumbnails for PDF pages</li>
+    </ul>
+    
+    <h4 class="mt-4">How It Works</h4>
+    <p>Our conversion process works as follows:</p>
+    <ol>
+        <li>Your PDF is analyzed and each page is identified</li>
+        <li>Each page is rendered at high resolution</li>
+        <li>The rendered pages are converted to your selected image format</li>
+        <li>All images are packaged into a ZIP file for easy download</li>
+    </ol>
+    
+    <div class="alert alert-info mt-4">
+        <i class="fas fa-info-circle"></i>
+        <span>The output images will be named sequentially (page_1.png, page_2.png, etc.).</span>
+    </div>
+</div>
+{% endblock %}

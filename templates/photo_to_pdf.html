@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+
+{% block title %}Photo to PDF - NiSqFile{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Photo to PDF Conversion</h1>
+    <p class="lead">Convert your images into a professional PDF document</p>
+</div>
+
+<div class="file-upload-container">
+    <form id="fileOperationForm" action="/photo-to-pdf" method="post" enctype="multipart/form-data">
+        <div class="upload-area">
+            <i class="fas fa-images"></i>
+            <h3>Upload Images</h3>
+            <p class="upload-text">Drag & drop your images here or click to browse</p>
+            <p class="text-muted">Supported formats: JPG, PNG, GIF, BMP, TIFF</p>
+            <input type="file" name="file" id="multiFileInput" accept=".jpg,.jpeg,.png,.gif,.bmp,.tiff" multiple required>
+        </div>
+        
+        <div class="selected-files-container mt-3">
+            <h4>Selected Images:</h4>
+            <ul id="selectedFiles" class="list-group">
+                <li class="list-group-item">No files selected</li>
+            </ul>
+            <p class="text-muted mt-2"><small>Images will be arranged in the PDF in the order shown above.</small></p>
+        </div>
+        
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary btn-block" disabled>Create PDF</button>
+        </div>
+    </form>
+    
+    <div class="progress-container mt-4">
+        <div class="progress-bar">
+            <div class="fill"></div>
+        </div>
+        <p class="progress-text">Processing...</p>
+    </div>
+    
+    <div class="results-container"></div>
+</div>
+
+<div class="info-section mt-5">
+    <h3>About Photo to PDF Conversion</h3>
+    <p>This tool combines multiple images into a single PDF document. It's perfect for:</p>
+    <ul>
+        <li>Creating photo albums or portfolios</li>
+        <li>Combining scanned documents</li>
+        <li>Sharing multiple images as a single file</li>
+        <li>Creating documentation with image-based content</li>
+    </ul>
+    
+    <h4 class="mt-4">How It Works</h4>
+    <p>Our conversion process follows these steps:</p>
+    <ol>
+        <li>Upload one or more images</li>
+        <li>The images are processed and arranged in the order they were selected</li>
+        <li>Each image is placed on its own page in the PDF</li>
+        <li>A high-quality PDF document is generated for download</li>
+    </ol>
+    
+    <div class="alert alert-info mt-4">
+        <i class="fas fa-info-circle"></i>
+        <span>For best results, use images with similar dimensions and orientations.</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    initMultiFileDisplay();
+});
+</script>
+{% endblock %}

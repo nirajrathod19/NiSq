@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+{% block title %}Word to PDF - NiSqFile{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Word to PDF Conversion</h1>
+    <p class="lead">Convert Microsoft Word documents to PDF format</p>
+</div>
+
+<div class="file-upload-container">
+    <form id="fileOperationForm" action="/word-to-pdf" method="post" enctype="multipart/form-data">
+        <div class="upload-area">
+            <i class="fas fa-file-word"></i>
+            <h3>Upload Word Document</h3>
+            <p class="upload-text">Drag & drop your Word document here or click to browse</p>
+            <p class="text-muted">Supported formats: DOC, DOCX</p>
+            <input type="file" name="file" accept=".doc,.docx" required>
+        </div>
+        
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary btn-block" disabled>Convert to PDF</button>
+        </div>
+    </form>
+    
+    <div class="progress-container mt-4">
+        <div class="progress-bar">
+            <div class="fill"></div>
+        </div>
+        <p class="progress-text">Processing...</p>
+    </div>
+    
+    <div class="results-container"></div>
+</div>
+
+<div class="info-section mt-5">
+    <h3>About Word to PDF Conversion</h3>
+    <p>Converting Word documents to PDF format offers several advantages:</p>
+    <ul>
+        <li>Universal compatibility - PDFs can be viewed on any device</li>
+        <li>Preserve formatting and layout across platforms</li>
+        <li>Protect your content from unwanted editing</li>
+        <li>Reduce file size for easier sharing</li>
+        <li>Create professional-looking documents for distribution</li>
+    </ul>
+    
+    <h4 class="mt-4">How It Works</h4>
+    <p>Our conversion process preserves your document's formatting:</p>
+    <ol>
+        <li>Your Word document is analyzed for content, formatting, and fonts</li>
+        <li>All text, images, tables, and other elements are extracted</li>
+        <li>The content is rendered to a PDF format, preserving the original layout</li>
+        <li>The resulting PDF is optimized for quality and file size</li>
+    </ol>
+    
+    <div class="alert alert-info mt-4">
+        <i class="fas fa-info-circle"></i>
+        <span>For best results, ensure your Word document uses standard fonts.</span>
+    </div>
+</div>
+{% endblock %}

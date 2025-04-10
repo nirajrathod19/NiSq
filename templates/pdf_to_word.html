@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+
+{% block title %}PDF to Word - NiSqFile{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>PDF to Word Conversion</h1>
+    <p class="lead">Convert PDF documents to editable Word format</p>
+</div>
+
+<div class="file-upload-container">
+    <form id="fileOperationForm" action="/pdf-to-word" method="post" enctype="multipart/form-data">
+        <div class="upload-area">
+            <i class="fas fa-file-pdf"></i>
+            <h3>Upload PDF</h3>
+            <p class="upload-text">Drag & drop your PDF file here or click to browse</p>
+            <p class="text-muted">Only PDF files are supported (.pdf)</p>
+            <input type="file" name="file" accept=".pdf" required>
+        </div>
+        
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary btn-block" disabled>Convert to Word</button>
+        </div>
+    </form>
+    
+    <div class="progress-container mt-4">
+        <div class="progress-bar">
+            <div class="fill"></div>
+        </div>
+        <p class="progress-text">Processing...</p>
+    </div>
+    
+    <div class="results-container"></div>
+</div>
+
+<div class="info-section mt-5">
+    <h3>About PDF to Word Conversion</h3>
+    <p>Converting PDFs to Word documents allows you to:</p>
+    <ul>
+        <li>Edit content that's locked in PDF format</li>
+        <li>Extract text and tables for use in other documents</li>
+        <li>Update and modify existing PDF content</li>
+        <li>Collaborate on documents with others</li>
+    </ul>
+    
+    <h4 class="mt-4">How It Works</h4>
+    <p>Our conversion tool uses advanced technology to extract content from PDFs:</p>
+    <ol>
+        <li>The PDF document is analyzed for text, images, and formatting</li>
+        <li>Text content is extracted while preserving structure</li>
+        <li>Tables and layout elements are identified</li>
+        <li>All content is assembled into a Word document (.docx) format</li>
+    </ol>
+    
+    <div class="alert alert-warning mt-4">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span>Please note that conversion quality depends on the PDF's structure. PDFs with complex layouts or scanned content may not convert perfectly.</span>
+    </div>
+</div>
+{% endblock %}

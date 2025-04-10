@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+
+{% block title %}Download Source Code - NiSqFile{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Download Source Code</h1>
+    <p class="lead">Get the full source code for NiSqFile application</p>
+</div>
+
+<div class="source-download-container">
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title"><i class="fas fa-code"></i> NiSqFile Source Code</h3>
+            <p class="card-text">
+                NiSqFile is an open-source file conversion and compression application built with Python Flask. 
+                Download the complete source code to run it locally or contribute to its development.
+            </p>
+            
+            <h4 class="mt-4">Included in the Download:</h4>
+            <ul class="source-features">
+                <li><i class="fas fa-check-circle"></i> Flask web application files</li>
+                <li><i class="fas fa-check-circle"></i> PDF processing utilities</li>
+                <li><i class="fas fa-check-circle"></i> Image conversion utilities</li>
+                <li><i class="fas fa-check-circle"></i> Document format converters</li>
+                <li><i class="fas fa-check-circle"></i> User interface templates and assets</li>
+                <li><i class="fas fa-check-circle"></i> JavaScript and CSS files</li>
+            </ul>
+            
+            <div class="mt-4 text-center">
+                <a href="/download-source" class="btn btn-primary btn-lg">
+                    <i class="fas fa-download"></i> Download Source Code
+                </a>
+            </div>
+            
+            <div class="mt-4">
+                <h4>System Requirements:</h4>
+                <ul>
+                    <li>Python 3.6 or higher</li>
+                    <li>Flask framework</li>
+                    <li>PyPDF2, PIL (Pillow), img2pdf libraries</li>
+                    <li>python-docx for document processing</li>
+                    <li>PyMuPDF (fitz) for PDF manipulation</li>
+                </ul>
+            </div>
+            
+            <div class="alert alert-info mt-4">
+                <i class="fas fa-info-circle"></i>
+                <p>The source code is provided for educational and development purposes. Please respect the license terms when using or modifying the code.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="contribution-info mt-5">
+    <h3>Contributing to NiSqFile</h3>
+    <p>
+        NiSqFile is an open-source project and welcomes contributions from the community. 
+        If you're interested in improving the application or adding new features, please consider contributing.
+    </p>
+    
+    <h4 class="mt-4">Ways to Contribute:</h4>
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-bug"></i> Bug Reporting</h5>
+                    <p class="card-text">Found a bug? Let us know so we can fix it.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-lightbulb"></i> Feature Requests</h5>
+                    <p class="card-text">Suggest new features or improvements to existing functionality.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-code-branch"></i> Code Contributions</h5>
+                    <p class="card-text">Submit pull requests to add new features or fix existing issues.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

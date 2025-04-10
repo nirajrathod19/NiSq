@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+
+{% block title %}Compress Files - NiSqFile{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>File Compression</h1>
+    <p class="lead">Reduce file size while maintaining quality</p>
+</div>
+
+<div class="file-upload-container">
+    <form id="fileOperationForm" action="/compress" method="post" enctype="multipart/form-data">
+        <div class="upload-area">
+            <i class="fas fa-compress"></i>
+            <h3>Upload File</h3>
+            <p class="upload-text">Drag & drop your file here or click to browse</p>
+            <p class="text-muted">Supported formats: PDF, JPG, PNG, DOCX</p>
+            <input type="file" name="file" required>
+        </div>
+        
+        <div class="options-container mt-4">
+            <h3>Compression Options</h3>
+            <div class="form-group">
+                <label for="targetSize">Target Size:</label>
+                <div class="d-flex align-items-center">
+                    <input type="number" id="targetSize" name="target_size" class="form-control" min="1" step="0.1" placeholder="Enter size" required>
+                    <select name="size_unit" class="form-select ml-2" style="width: auto;">
+                        <option value="KB">KB</option>
+                        <option value="MB" selected>MB</option>
+                        <option value="GB">GB</option>
+                        <option value="TB">TB</option>
+                    </select>
+                </div>
+                <small class="text-muted">Specify your desired file size</small>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary btn-block" disabled>Compress File</button>
+        </div>
+    </form>
+    
+    <div class="progress-container mt-4">
+        <div class="progress-bar">
+            <div class="fill"></div>
+        </div>
+        <p class="progress-text">Processing...</p>
+    </div>
+    
+    <div class="results-container"></div>
+</div>
+
+<div class="info-section mt-5">
+    <h3>About File Compression</h3>
+    <p>Our compression tool helps you reduce file sizes while maintaining optimal quality. This is useful for:</p>
+    <ul>
+        <li>Reducing storage space needed for files</li>
+        <li>Making files smaller for email attachments</li>
+        <li>Optimizing files for web upload or download</li>
+        <li>Faster file transfers</li>
+    </ul>
+    
+    <h4 class="mt-4">How It Works</h4>
+    <p>Our compression technology works differently based on the file type:</p>
+    <ul>
+        <li><strong>Images (JPG, PNG):</strong> We optimize the compression ratio and reduce unnecessary metadata</li>
+        <li><strong>PDFs:</strong> We compress embedded images and optimize the PDF structure</li>
+        <li><strong>Documents:</strong> We optimize embedded resources while preserving formatting</li>
+    </ul>
+    
+    <div class="alert alert-info mt-4">
+        <i class="fas fa-info-circle"></i>
+        <span>For best results with image files, use JPG format for photographs and PNG for graphics with text.</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Enable the submit button once file is selected
+    const fileInput = document.querySelector('input[type="file"]');
+    const submitButton = document.querySelector('button[type="submit"]');
+    
+    if (fileInput && submitButton) {
+        fileInput.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                submitButton.disabled = false;
+            } else {
+                submitButton.disabled = true;
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

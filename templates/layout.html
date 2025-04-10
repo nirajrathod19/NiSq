@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}File Converter & Compressor{% endblock %}</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📄</text></svg>">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    
+    <!-- Bootstrap CSS (Replit Theme) -->
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="/" class="logo">
+                <i class="fas fa-file-contract"></i>
+                NiSqFile
+            </a>
+            
+            <!-- Desktop Navigation -->
+            <nav class="desktop-nav">
+                <ul>
+                    <li><a href="/" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="/compress" class="nav-link"><i class="fas fa-compress"></i> Compress</a></li>
+                    <li><a href="/pdf-to-photo" class="nav-link"><i class="fas fa-file-image"></i> PDF to Image</a></li>
+                    <li><a href="/photo-to-pdf" class="nav-link"><i class="fas fa-file-pdf"></i> Image to PDF</a></li>
+                    <li><a href="/word-to-pdf" class="nav-link"><i class="fas fa-file-word"></i> Word to PDF</a></li>
+                    <li><a href="/pdf-to-word" class="nav-link"><i class="fas fa-file-alt"></i> PDF to Word</a></li>
+                    <li><a href="/add-watermark" class="nav-link"><i class="fas fa-stamp"></i> Watermark</a></li>
+                    <li><a href="/get-download-page" class="nav-link"><i class="fas fa-download"></i> Sources</a></li>
+                </ul>
+            </nav>
+            
+            <!-- Mobile menu toggle -->
+            <button class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+    
+    <!-- Mobile side menu -->
+    <div class="mobile-menu">
+        <ul class="mobile-menu-items">
+            <li class="mobile-menu-item">
+                <a href="/" class="mobile-menu-link">
+                    <i class="fas fa-home"></i> Home
+                </a>
+            </li>
+            <li class="mobile-menu-item">
+                <a href="/compress" class="mobile-menu-link">
+                    <i class="fas fa-compress"></i> Compress File
+                </a>
+            </li>
+            <li class="mobile-menu-item">
+                <a href="/pdf-to-photo" class="mobile-menu-link">
+                    <i class="fas fa-file-image"></i> PDF to Photo
+                </a>
+            </li>
+            <li class="mobile-menu-item">
+                <a href="/photo-to-pdf" class="mobile-menu-link">
+                    <i class="fas fa-file-pdf"></i> Photo to PDF
+                </a>
+            </li>
+            <li class="mobile-menu-item">
+                <a href="/word-to-pdf" class="mobile-menu-link">
+                    <i class="fas fa-file-word"></i> Word to PDF
+                </a>
+            </li>
+            <li class="mobile-menu-item">
+                <a href="/pdf-to-word" class="mobile-menu-link">
+                    <i class="fas fa-file-alt"></i> PDF to Word
+                </a>
+            </li>
+            <li class="mobile-menu-item">
+                <a href="/add-watermark" class="mobile-menu-link">
+                    <i class="fas fa-stamp"></i> Add Watermark
+                </a>
+            </li>
+            <li class="mobile-menu-item">
+                <a href="/get-download-page" class="mobile-menu-link">
+                    <i class="fas fa-download"></i> Read Source
+                </a>
+            </li>
+        </ul>
+    </div>
+    
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="alert alert-warning">
+                        <ul>
+                            {% for message in messages %}
+                                <li>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            {% endwith %}
+            
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+    
+    <!-- Semi-circular Menu -->
+    <div class="menu-container">
+        <div class="menu-toggle-btn">
+            <i class="fas fa-plus"></i>
+        </div>
+        <div class="semi-circle">
+            <div class="menu-items">
+                <a href="/compress" class="menu-item" data-path="compress">
+                    <i class="fas fa-compress"></i>
+                    <span class="tooltip">Compress File</span>
+                </a>
+                <a href="/pdf-to-photo" class="menu-item" data-path="pdf-to-photo">
+                    <i class="fas fa-file-image"></i>
+                    <span class="tooltip">PDF to Photo</span>
+                </a>
+                <a href="/photo-to-pdf" class="menu-item" data-path="photo-to-pdf">
+                    <i class="fas fa-file-pdf"></i>
+                    <span class="tooltip">Photo to PDF</span>
+                </a>
+                <a href="/word-to-pdf" class="menu-item" data-path="word-to-pdf">
+                    <i class="fas fa-file-word"></i>
+                    <span class="tooltip">Word to PDF</span>
+                </a>
+                <a href="/pdf-to-word" class="menu-item" data-path="pdf-to-word">
+                    <i class="fas fa-file-alt"></i>
+                    <span class="tooltip">PDF to Word</span>
+                </a>
+                <a href="/add-watermark" class="menu-item" data-path="add-watermark">
+                    <i class="fas fa-stamp"></i>
+                    <span class="tooltip">Add Watermark</span>
+                </a>
+                <a href="/get-download-page" class="menu-item" data-path="get-download-page">
+                    <i class="fas fa-download"></i>
+                    <span class="tooltip">Download Source Code</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 NiSqFile. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/menu.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/file_operations.js') }}"></script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
