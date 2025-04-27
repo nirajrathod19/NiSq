@@ -18,8 +18,6 @@ from pdf2image import convert_from_bytes
 from io import BytesIO
 
 import subprocess
-print(fitz.__doc__)
-print(fitz.Matrix)
 
 def compress_pdf(input_path, output_path):
     gs_path = r"C:\Program Files\gs\gs10.05.0\bin\gswin64c.exe"  # <-- change this if your Ghostscript installed somewhere else
