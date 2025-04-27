@@ -2,6 +2,7 @@ import os
 import uuid
 import logging
 import zipfile
+import pytesseract
 from pdf2docx import Converter
 from docx2pdf import convert
 from PyPDF2 import PdfReader, PdfWriter
@@ -12,6 +13,26 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 from werkzeug.utils import secure_filename
 import tempfile
 import shutil
+from pdf2image import convert_from_bytes
+from io import BytesIO
+
+import subprocess
+
+def compress_pdf(input_path, output_path):
+    gs_path = r"C:\Program Files\gs\gs10.05.0\bin\gswin64c.exe"  # <-- change this if your Ghostscript installed somewhere else
+    command = [
+        gs_path,
+        "-sDEVICE=pdfwrite",
+        "-dCompatibilityLevel=1.4",
+        "-dPDFSETTINGS=/ebook",  # /screen = maximum compression, /ebook = good compression
+        "-dNOPAUSE",
+        "-dQUIET",
+        "-dBATCH",
+        f"-sOutputFile={output_path}",
+        input_path
+    ]
+    subprocess.run(command)
+
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG, 
@@ -71,76 +92,111 @@ def get_file_size(file_path):
     size_in_bytes = os.path.getsize(file_path)
     return round(size_in_bytes / (1024 * 1024), 2)  # Convert to MB and round to 2 decimal places
 
-def compress_file(file_path, target_size):
+def compress_image(input_path, output_path, target_size_mb):
     """
-    Compress a file to target size in MB
-    
+    Compress an image to approximately target size in MB.
+    """
+    logger.info(f"Starting image compression for {input_path}")
+
+    with Image.open(input_path) as img:
+        quality = 95  # Start from high quality
+        img.save(output_path, optimize=True, quality=quality)
+
+        current_size = os.path.getsize(output_path) / (1024 * 1024)  # size in MB
+
+        while current_size > target_size_mb and quality > 10:
+            quality -= 5
+            img.save(output_path, optimize=True, quality=quality)
+            current_size = os.path.getsize(output_path) / (1024 * 1024)
+            logger.info(f"Compressed to {current_size:.2f} MB at quality {quality}")
+
+    logger.info(f"Final compressed image size: {current_size:.2f} MB")
+
+
+def compress_docx(input_path, output_path):
+    """
+    Compress a DOCX file by recompressing images inside it.
+    """
+
+    logger.info(f"Starting DOCX compression for {input_path}")
+
+    with tempfile.TemporaryDirectory() as tempdir:
+        with zipfile.ZipFile(input_path, 'r') as zip_ref:
+            zip_ref.extractall(tempdir)
+
+        # Go to 'word/media' folder inside extracted DOCX
+        media_path = os.path.join(tempdir, 'word', 'media')
+        if os.path.exists(media_path):
+            for image_file in os.listdir(media_path):
+                image_full_path = os.path.join(media_path, image_file)
+                if image_full_path.lower().endswith(('.png', '.jpg', '.jpeg')):
+                    try:
+                        img = Image.open(image_full_path)
+                        img.save(image_full_path, optimize=True, quality=50)  # You can adjust quality
+                        logger.info(f"Compressed {image_file}")
+                    except Exception as e:
+                        logger.warning(f"Failed to compress {image_file}: {e}")
+
+        # Now create a new zip archive as compressed DOCX
+        shutil.make_archive(output_path.replace('.docx', ''), 'zip', tempdir)
+        # Rename .zip back to .docx
+        shutil.move(output_path.replace('.docx', '') + '.zip', output_path)
+
+    logger.info(f"Compressed DOCX saved to {output_path}")
+
+def compress_file(file_path, target_size_kb):
+    """
+    Compress a file to target size in KB (not MB now).
+
     Args:
         file_path: Path to the file to compress
-        target_size: Target size in MB
+        target_size_kb: Target size in KB
         
     Returns:
         Path to the compressed file
     """
-    logger.info(f"Starting compression of {file_path} to target size {target_size} MB")
-    
+    logger.info(f"Starting compression of {file_path} to target size {target_size_kb} KB")
+
     file_ext = os.path.splitext(file_path)[1].lower()
     output_path = f"{os.path.splitext(file_path)[0]}_compressed{file_ext}"
-    
+
     try:
+        # Convert KB to MB for internal calculation
+        target_size_mb = target_size_kb / 1024
+
         # Get original file size
-        original_size = os.path.getsize(file_path) / (1024 * 1024)  # Convert to MB
-        logger.info(f"Original size: {original_size} MB, Target size: {target_size} MB")
-        
-        # If target size is larger than original, just copy the file
-        if target_size >= original_size:
-            logger.info("Target size is larger than or equal to original, copying file")
+        original_size = os.path.getsize(file_path) / (1024 * 1024)  # MB
+        logger.info(f"Original size: {original_size} MB, Target size: {target_size_mb} MB")
+
+        # If target size is larger than original, just copy
+        if target_size_mb >= original_size:
+            logger.info("Target size >= original size, copying file")
             shutil.copy(file_path, output_path)
             return output_path
-        
+
         # Compress based on file type
-        if file_ext in ['.jpg', '.jpeg', '.png', '.gif']:
+        if file_ext in ['.jpg', '.jpeg', '.png']:
             logger.info("Compressing image file")
-            # Compress image
-            with Image.open(file_path) as img:
-                # Start with high quality
-                quality = 90
-                img.save(output_path, optimize=True, quality=quality)
-                
-                # Reduce quality until we reach target size or minimum quality
-                current_size = os.path.getsize(output_path) / (1024 * 1024)
-                while current_size > target_size and quality > 10:
-                    quality -= 10
-                    logger.info(f"Trying quality: {quality}, current size: {current_size} MB")
-                    img.save(output_path, optimize=True, quality=quality)
-                    current_size = os.path.getsize(output_path) / (1024 * 1024)
-        
+            compress_image(file_path, output_path, target_size_mb)
+
         elif file_ext == '.pdf':
             logger.info("Compressing PDF file")
-            # For PDF, we'll do a simple copy for now
-            # In a real implementation, you'd use a PDF compression library
-            shutil.copy(file_path, output_path)
-            
-            # Just for demonstration, let's log that we can't compress PDF efficiently
-            logger.info("PDF compression not fully implemented, using original file")
-        
+            compress_pdf(file_path, output_path)
+
         else:
-            logger.info(f"File type {file_ext} not supported for compression, copying file")
-            # For other file types, just copy
+            logger.info(f"Unsupported file {file_ext}, copying")
             shutil.copy(file_path, output_path)
-        
-        # Log final compression result
+
         final_size = os.path.getsize(output_path) / (1024 * 1024)
         logger.info(f"Compression complete. Original: {original_size} MB, Compressed: {final_size} MB")
-        
         return output_path
-    
+
     except Exception as e:
         logger.error(f"Error in compress_file: {str(e)}")
-        # If compression fails, return original file
         if not os.path.exists(output_path):
             shutil.copy(file_path, output_path)
         return output_path
+
 
 def pdf_to_images(pdf_path, dpi=300):
     """
