@@ -3,7 +3,7 @@ import uuid
 import logging
 import zipfile
 import pytesseract
-import fitz
+import fitz  # This comes from PyMuPDF
 from pdf2docx import Converter
 from docx2pdf import convert
 from PyPDF2 import PdfReader, PdfWriter
